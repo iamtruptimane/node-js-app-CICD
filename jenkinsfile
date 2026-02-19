@@ -2,14 +2,15 @@ pipeline {
     agent any
 
     environment {
-        SERVER_IP      = '13.50.101.188'
+        SERVER_IP      = '172.31.1.174'
         SSH_CREDENTIAL = 'node-app-key'
         REPO_URL       = 'https://github.com/iamtruptimane/node-js-app-CICD.git'
         BRANCH         = 'main'
         REMOTE_USER    = 'ubuntu'
         REMOTE_PATH    = '/home/ubuntu/node-app'
     }
-
+    
+    
     stages {
         stage('Clone Repository') {
             steps {
@@ -17,7 +18,7 @@ pipeline {
             }
         }
 
-        stage('Upload Files to EC2') {
+        stage('Upload Files to target-server') {
             steps {
                 sshagent([SSH_CREDENTIAL]) {
                     sh """
@@ -28,7 +29,7 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies & Start App') {
+        stage('Install Dependencies & Start App on the target server') {
             steps {
                 sshagent([SSH_CREDENTIAL]) {
                     sh """
@@ -52,4 +53,6 @@ pipeline {
         }
     }
 }
+
+
 
